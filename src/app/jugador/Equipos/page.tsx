@@ -35,10 +35,12 @@ const TeamsPage: React.FC = () => {
           </Link>
 
           {/* Administrar equipos */}
-          <button className="flex flex-col items-center space-y-4 focus:outline-none">
-            <img src="/eliminar_jugador.png" alt="Eliminar Jugador" className="w-64 h-64" />
-            <p className="text-lg font-semibold">Eliminar Jugador</p>
-          </button>
+          <Link href="/jugador/Equipos/ListarEquipos" legacyBehavior>
+            <a className="flex flex-col items-center space-y-4 focus:outline-none">
+              <img src="/eliminar_jugador.png" alt="Eliminar Jugador" className="w-64 h-64" />
+              <p className="text-lg font-semibold">Eliminar Jugador</p>
+            </a>
+          </Link>
 
           {/* Unirse a un equipo */}
           <button className="flex flex-col items-center space-y-4 focus:outline-none">

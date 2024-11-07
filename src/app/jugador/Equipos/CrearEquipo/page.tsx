@@ -1,15 +1,29 @@
 "use client";
 
 import React, { useState } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
-const CrearEquipo = () => {
-  const [nombreEquipo, setNombreEquipo] = useState('');
-  const [mensaje, setMensaje] = useState('');
+const CrearEquipoPage = () => {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    nombre: '',
+    // Puedes agregar más campos si son necesarios
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const handleCrearEquipo = async (e: React.FormEvent) => {
+  const handleLogout = () => {
+    Cookies.remove('token');
+    router.push('/');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
 
     try {
       const token = Cookies.get('token');
@@ -19,60 +33,97 @@ const CrearEquipo = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ nombre: nombreEquipo }),
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        setMensaje('Equipo creado exitosamente');
-        setNombreEquipo('');
+        setSuccess('Equipo creado exitosamente');
+        setFormData({ nombre: '' }); // Resetear el formulario
+        // Opcional: redirigir después de un tiempo
+        setTimeout(() => {
+          router.push('/jugador/Equipos');
+        }, 2000);
       } else {
-        const errorData = await response.json();
-        setMensaje(`Error: ${errorData.message || 'No se pudo crear el equipo'}`);
+        const data = await response.json();
+        throw new Error(data.message || 'Error al crear el equipo');
       }
-    } catch (error) {
-      setMensaje('Error de red o servidor');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error desconocido');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Barra de navegación */}
       <header className="bg-blue-500 text-white py-4">
-        <div className="container mx-auto flex justify-between items-center">
+        <div className="container mx-auto flex justify-between">
           <h1 className="text-2xl font-bold">CourtHub</h1>
           <nav className="flex space-x-4">
-            <Link href="/jugador" className="hover:underline">Inicio</Link>
-            <Link href="/jugador/Equipos" className="hover:underline">Equipos</Link>
-            <Link href="/reserva" className="hover:underline">Reserva espacios deportivos</Link>
-            <Link href="/torneos" className="hover:underline">Torneos</Link>
-            <Link href="/entrenos" className="hover:underline">Entrenos</Link>
+            <a href="/jugador" className="hover:underline">Inicio</a>
+            <a href="/jugador/Equipos" className="hover:underline">Equipos</a>
+            <a href="#" className="hover:underline">Reserva espacios deportivos</a>
+            <a href="#" className="hover:underline">Torneos</a>
+            <a href="#" className="hover:underline">Entrenos</a>
           </nav>
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+          >
+            Cerrar Sesión
+          </button>
         </div>
       </header>
 
-      {/* Contenido principal */}
-      <main className="container mx-auto py-8">
-        <h2 className="text-3xl font-bold text-center mb-6">Crear Equipo</h2>
-        <form onSubmit={handleCrearEquipo} className="max-w-md mx-auto bg-white p-6 rounded shadow">
-          <label className="block text-sm font-medium text-gray-700">Nombre del equipo:</label>
-          <input
-            type="text"
-            value={nombreEquipo}
-            onChange={(e) => setNombreEquipo(e.target.value)}
-            className="mt-1 p-2 border rounded w-full"
-            required
-          />
-          <button
-            type="submit"
-            className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-          >
-            Crear Equipo
-          </button>
+      <main className="container mx-auto py-8 flex flex-col items-center">
+        <h1 className="text-4xl font-bold mb-8">Crear Nuevo Equipo</h1>
+
+        {loading && (
+          <div className="mb-4 text-blue-500">Creando equipo...</div>
+        )}
+
+        {error && (
+          <div className="mb-4 text-red-500">{error}</div>
+        )}
+
+        {success && (
+          <div className="mb-4 text-green-500">{success}</div>
+        )}
+
+        <form onSubmit={handleSubmit} className="w-full max-w-md">
+          <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Nombre del Equipo
+            </label>
+            <input
+              type="text"
+              value={formData.nombre}
+              onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              required
+            />
+          </div>
+
+          <div className="flex items-center justify-between gap-4">
+            <button
+              type="button"
+              onClick={() => router.push('/jugador/Equipos')}
+              className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full disabled:opacity-50"
+            >
+              Crear Equipo
+            </button>
+          </div>
         </form>
-        {mensaje && <p className="text-center mt-4">{mensaje}</p>}
       </main>
     </div>
   );
 };
 
-export default CrearEquipo;
+export default CrearEquipoPage;
