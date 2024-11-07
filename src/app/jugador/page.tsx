@@ -4,12 +4,8 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
-const UserMain: React.FC = () => {
+const PlayerMain: React.FC = () => {
   const router = useRouter();
-
-  const handleRegisterAdmin = () => {
-    router.push('/admin/register');
-  };
 
   const handleLogout = () => {
     Cookies.remove('token'); // Elimina el token de las cookies
@@ -65,18 +61,8 @@ const UserMain: React.FC = () => {
           </button>
         </div>
       </main>
-
-      {/* Botón para registrar un nuevo administrador */}
-      <div className="fixed bottom-4 right-4">
-        <button
-          onClick={handleRegisterAdmin}
-          className="bg-blue-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-blue-600"
-        >
-          Registrar Admin
-        </button>
-      </div>
     </div>
   );
 };
 
-export default UserMain;
+export default PlayerMain;

@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -25,23 +27,25 @@ export default function LoginPage() {
       if (response.ok) {
         console.log('Login successful:', data);
 
-        // Verifica el rol del usuario y redirige a la página correspondiente
+        // Almacena el token en las cookies
+        Cookies.set('token', data.access_token);
+
         switch (data.user.role?.toLowerCase()) {
           case 'admin':
             router.push('/admin'); 
             break;
           case 'jugador':
-            router.push('/jugador'); // Redirige a la página de jugador
+            router.push('/jugador');
             break;
           case 'entrenador':
-            router.push('/entrenador'); // Redirige a la página de entrenador
+            router.push('/entrenador');
             break;
           case 'arbitro':
-            router.push('/arbitro'); // Redirige a la página de árbitro
+            router.push('/arbitro');
             break;
           default:
             console.warn('Rol desconocido, redirigiendo a la página de inicio');
-            router.push('/'); // Redirige a la página de inicio si el rol es desconocido
+            router.push('/');
         }
       } else {
         console.error('Login failed:', data.message);
@@ -60,7 +64,9 @@ export default function LoginPage() {
           <h2 className="text-blue-500 text-2xl font-bold mb-4">Iniciar Sesión</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="username" className="block text-gray-700 text-sm font-bold mb-2">Nombre de usuario</label>
+              <label htmlFor="username" className="block text-gray-700 text-sm font-bold mb-2">
+                Nombre de usuario
+              </label>
               <input
                 id="username"
                 type="text"
@@ -71,7 +77,9 @@ export default function LoginPage() {
               />
             </div>
             <div className="mb-6">
-              <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
+              <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
+                Contraseña
+              </label>
               <input
                 id="password"
                 type="password"
@@ -90,7 +98,7 @@ export default function LoginPage() {
           </form>
           <div className="flex justify-between mt-4">
             <a href="#" className="text-blue-500 text-sm">¿Olvidaste la contraseña?</a>
-            <a href="#" className="text-blue-500 text-sm">Registrarse</a>
+            <Link href="/register" className="text-blue-500 text-sm">Registrarse</Link>
           </div>
         </div>
       </div>
