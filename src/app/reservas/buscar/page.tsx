@@ -20,7 +20,7 @@ const BuscarReservaPage = () => {
   const [reserva, setReserva] = useState<Reserva | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [searched, setSearched] = useState(false);
+  //const [searched, setSearched] = useState(false);
 
   const handleCourtHubClick = () => {
     const token = Cookies.get('token');
@@ -46,7 +46,7 @@ const BuscarReservaPage = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    setSearched(true);
+    //setSearched(true);
     setReserva(null); // Limpiar resultado anterior
 
     try {
@@ -80,7 +80,7 @@ const BuscarReservaPage = () => {
     setReservaId('');
     setReserva(null);
     setError('');
-    setSearched(false);
+    //setSearched(false);
   };
 
   return (
