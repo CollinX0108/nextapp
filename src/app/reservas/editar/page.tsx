@@ -23,6 +23,21 @@ const ListaReservasPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const handleCourtHubClick = () => {
+    const token = Cookies.get('token');
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const role = decodedToken.role;
+      if (role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/jugador');
+      }
+    } else {
+      router.push('/');
+    }
+  };
+
   useEffect(() => {
     const fetchReservas = async () => {
       try {
@@ -30,7 +45,6 @@ const ListaReservasPage = () => {
         const decodedToken = JSON.parse(atob(token!.split('.')[1]));
         const isAdmin = decodedToken.role === 'admin';
         
-        // Usar diferente endpoint según el rol
         const endpoint = isAdmin ? 'listar' : 'mis-reservas';
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservas/${endpoint}`, {
           headers: {
@@ -74,8 +88,13 @@ const ListaReservasPage = () => {
   return (
     <div className="min-h-screen bg-white">
       <header className="bg-blue-500 text-white py-4">
-        <div className="container mx-auto flex justify-between">
-          <h1 className="text-2xl font-bold">CourtHub</h1>
+        <div className="container mx-auto flex justify-between items-center">
+          <button 
+            onClick={handleCourtHubClick}
+            className="text-2xl font-bold hover:text-gray-200"
+          >
+            CourtHub
+          </button>
           <nav className="flex space-x-4">
             <a href="#" className="hover:underline">Equipos</a>
             <a href="#" className="hover:underline">Reserva espacios deportivos</a>

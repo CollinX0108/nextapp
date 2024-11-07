@@ -22,6 +22,21 @@ const BuscarReservaPage = () => {
   const [error, setError] = useState('');
   const [searched, setSearched] = useState(false);
 
+  const handleCourtHubClick = () => {
+    const token = Cookies.get('token');
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const role = decodedToken.role;
+      if (role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/jugador');
+      }
+    } else {
+      router.push('/');
+    }
+  };
+
   const handleLogout = () => {
     Cookies.remove('token');
     router.push('/');
@@ -71,8 +86,13 @@ const BuscarReservaPage = () => {
   return (
     <div className="min-h-screen bg-white">
       <header className="bg-blue-500 text-white py-4">
-        <div className="container mx-auto flex justify-between">
-          <h1 className="text-2xl font-bold">CourtHub</h1>
+        <div className="container mx-auto flex justify-between items-center">
+          <button 
+            onClick={handleCourtHubClick}
+            className="text-2xl font-bold hover:text-gray-200"
+          >
+            CourtHub
+          </button>
           <nav className="flex space-x-4">
             <a href="#" className="hover:underline">Equipos</a>
             <a href="#" className="hover:underline">Reserva espacios deportivos</a>

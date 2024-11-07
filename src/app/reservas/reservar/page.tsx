@@ -8,8 +8,6 @@ const ReservarPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const deporteSeleccionado = searchParams.get('sport') || '';
-  
-  console.log('Deporte seleccionado desde URL:', deporteSeleccionado);
 
   const [formData, setFormData] = useState({
     nombreReservante: '',
@@ -20,18 +18,26 @@ const ReservarPage = () => {
     deporte: deporteSeleccionado
   });
 
-  console.log('Estado inicial del formData:', formData);
+  const handleCourtHubClick = () => {
+    const token = Cookies.get('token');
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const role = decodedToken.role;
+      if (role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/jugador');
+      }
+    } else {
+      router.push('/');
+    }
+  };
 
   useEffect(() => {
-    console.log('useEffect ejecutándose con deporteSeleccionado:', deporteSeleccionado);
-    setFormData(prev => {
-      const newFormData = {
-        ...prev,
-        deporte: deporteSeleccionado
-      };
-      console.log('Nuevo formData después del useEffect:', newFormData);
-      return newFormData;
-    });
+    setFormData(prev => ({
+      ...prev,
+      deporte: deporteSeleccionado
+    }));
   }, [deporteSeleccionado]);
 
   const handleLogout = () => {
@@ -41,12 +47,8 @@ const ReservarPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Datos del formulario a enviar:', formData);
     try {
       const token = Cookies.get('token');
-      console.log('URL de la API:', process.env.NEXT_PUBLIC_API_URL);
-      console.log('URL completa:', `${process.env.NEXT_PUBLIC_API_URL}/reservas/crear`);
-
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservas/crear`, {
         method: 'POST',
         headers: {
@@ -60,16 +62,14 @@ const ReservarPage = () => {
         router.push(`/reservas?sport=${formData.deporte}`);
       } else {
         const errorData = await response.json();
-        console.error('Error detallado:', errorData);
         throw new Error(errorData.message || 'Error al crear la reserva');
       }
     } catch (error) {
-      console.error('Error completo:', error);
+      console.error('Error:', error);
       alert('Error al crear la reserva. Por favor, intente nuevamente.');
     }
   };
 
-  // Mapeo de deportes a imágenes
   const deporteImages: Record<string, string> = {
     futbolito: '/futbolito.PNG',
     volleyball: '/editar_reserva_volley.png',
@@ -82,8 +82,13 @@ const ReservarPage = () => {
   return (
     <div className="min-h-screen bg-white">
       <header className="bg-blue-500 text-white py-4">
-        <div className="container mx-auto flex justify-between">
-          <h1 className="text-2xl font-bold">CourtHub</h1>
+        <div className="container mx-auto flex justify-between items-center">
+          <button 
+            onClick={handleCourtHubClick}
+            className="text-2xl font-bold hover:text-gray-200"
+          >
+            CourtHub
+          </button>
           <nav className="flex space-x-4">
             <a href="#" className="hover:underline">Equipos</a>
             <a href="#" className="hover:underline">Reserva espacios deportivos</a>
@@ -186,10 +191,7 @@ const ReservarPage = () => {
             </label>
             <select
               value={formData.deporte}
-              onChange={(e) => {
-                console.log('Cambiando deporte a:', e.target.value);
-                setFormData({...formData, deporte: e.target.value});
-              }}
+              onChange={(e) => setFormData({...formData, deporte: e.target.value})}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               required
             >
@@ -203,7 +205,14 @@ const ReservarPage = () => {
             </select>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
+            <button
+              type="button"
+              onClick={() => router.push(`/reservas?sport=${formData.deporte}`)}
+              className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+            >
+              Cancelar
+            </button>
             <button
               type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"

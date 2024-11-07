@@ -8,7 +8,7 @@ const EditarReservaPage = ({ params }: { params: Promise<{ id: string }> }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const deporteSeleccionado = searchParams?.get('sport') || '';
-    const reservaId = React.use(params).id; // Usar React.use para acceder a params
+    const reservaId = React.use(params).id;
   
     const [formData, setFormData] = useState({
       nombreReservante: '',
@@ -22,11 +22,25 @@ const EditarReservaPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const handleCourtHubClick = () => {
+    const token = Cookies.get('token');
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const role = decodedToken.role;
+      if (role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/jugador');
+      }
+    } else {
+      router.push('/');
+    }
+  };
+
   useEffect(() => {
     const fetchReserva = async () => {
       try {
         const token = Cookies.get('token');
-        // Corregir la URL para que coincida con el backend
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservas/buscar/${reservaId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -76,7 +90,7 @@ const EditarReservaPage = ({ params }: { params: Promise<{ id: string }> }) => {
         },
         body: JSON.stringify({
           ...formData,
-          deporte: formData.deporte // No convertir a lowercase aquí
+          deporte: formData.deporte
         })
       });
 
@@ -108,8 +122,13 @@ const EditarReservaPage = ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <div className="min-h-screen bg-white">
       <header className="bg-blue-500 text-white py-4">
-        <div className="container mx-auto flex justify-between">
-          <h1 className="text-2xl font-bold">CourtHub</h1>
+        <div className="container mx-auto flex justify-between items-center">
+          <button 
+            onClick={handleCourtHubClick}
+            className="text-2xl font-bold hover:text-gray-200"
+          >
+            CourtHub
+          </button>
           <nav className="flex space-x-4">
             <a href="#" className="hover:underline">Equipos</a>
             <a href="#" className="hover:underline">Reserva espacios deportivos</a>
@@ -219,7 +238,7 @@ const EditarReservaPage = ({ params }: { params: Promise<{ id: string }> }) => {
                 onChange={(e) => setFormData({...formData, deporte: e.target.value})}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 required
-                >
+            >
                 <option value="">Seleccione un deporte</option>
                 <option value="futbolito">Futbolito</option>
                 <option value="pingpong">Ping Pong</option>
@@ -227,7 +246,7 @@ const EditarReservaPage = ({ params }: { params: Promise<{ id: string }> }) => {
                 <option value="futbol">Fútbol</option>
                 <option value="tennis">Tennis</option>
                 <option value="basketball">Basketball</option>
-                </select>
+            </select>
           </div>
 
           <div className="flex items-center justify-between gap-4">
