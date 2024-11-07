@@ -27,7 +27,12 @@ const ListarReservasPage = () => {
     const fetchReservas = async () => {
       try {
         const token = Cookies.get('token');
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservas/mis-reservas`, {
+        const decodedToken = JSON.parse(atob(token!.split('.')[1]));
+        const isAdmin = decodedToken.role === 'admin';
+        
+        // Usar diferente endpoint según el rol
+        const endpoint = isAdmin ? 'listar' : 'mis-reservas';
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservas/${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
