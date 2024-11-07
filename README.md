@@ -1,36 +1,116 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CourtHub - Frontend
 
-## Getting Started
+## Descripción
+CourtHub es una plataforma de gestión de reservas deportivas que permite a usuarios reservar espacios para diferentes deportes como fútbol, basketball, volleyball, tennis, ping pong y futbolito. El sistema maneja diferentes roles de usuario (administrador, jugador, árbitro, entrenador) con distintos niveles de acceso y funcionalidades.
 
-First, run the development server:
+## Características
+- 🔐 Sistema de autenticación JWT
+- 👥 Múltiples roles de usuario
+- 🏃 Gestión de reservas deportivas
+- 📅 Calendario de disponibilidad
+- 🎮 Interfaz intuitiva y responsive
+
+## Tecnologías Utilizadas
+- Next.js 13+
+- TypeScript
+- Tailwind CSS
+- JWT para autenticación
+- Cookies para manejo de sesión
+
+## Autores
+- Collin Gonzalez
+- Juan Ramirez
+
+## Requisitos Previos
+- Node.js 16.x o superior
+- npm o yarn
+- Backend de CourtHub en ejecución
+
+## Instalación
+
+1. Clonar el repositorio
+
+```bash
+git clone https://github.com/tu-usuario/courthub-frontend.git
+cd courthub-frontend
+```
+
+2. Instalar dependencias
+
+```bash
+npm install
+```
+
+3. Configurar variables de entorno
+
+```bash
+cp .env.example .env.local
+```
+
+4. Configurar el archivo .env.local
+
+```bash
+NEXT_PUBLIC_API_URL=cambiar
+```
+
+5. Iniciar el servidor de desarrollo
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Estructura del Proyecto
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+sports-reservation-frontend/
+├── src/
+│ ├── app/
+│ │ ├── admin/
+│ │ ├── jugador/ 
+│ │ ├── arbitro/ 
+│ │ ├── entrenador/
+│ │ └── reservas/ 
+│ ├── middleware.ts
+│ └── types/
+├── public/
+└── package.json
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Funcionalidades por Rol
 
-To learn more about Next.js, take a look at the following resources:
+### Administrador
+- Ver todas las reservas
+- Editar cualquier reserva
+- Cancelar cualquier reserva
+- Registrar nuevos administradores
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Jugador
+- Crear reservas deportivas
+- Ver sus propias reservas
+- Editar sus reservas
+- Cancelar sus reservas
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Árbitro
+- Ver calendario de eventos
+- (Funcionalidades en desarrollo)
 
-## Deploy on Vercel
+### Entrenador
+- Ver horarios disponibles
+- (Funcionalidades en desarrollo)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Uso
+1. Iniciar sesión con credenciales según rol
+2. Navegar a la sección de deportes
+3. Seleccionar el deporte deseado
+4. Gestionar reservas según permisos del rol
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## API Endpoints Utilizados
+- `POST /auth/login` - Inicio de sesión
+- `GET /reservas/listar` - Listar reservas (admin)
+- `GET /reservas/mis-reservas` - Reservas del usuario
+- `POST /reservas/crear` - Crear reserva
+- `PUT /reservas/editar/:id` - Editar reserva
+- `DELETE /reservas/cancelar/:id` - Cancelar reserva
+
+## Estado del Proyecto
+🚧 En desarrollo activo
