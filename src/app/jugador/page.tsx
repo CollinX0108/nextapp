@@ -22,7 +22,7 @@ const PlayerMain: React.FC = () => {
         <div className="container mx-auto flex justify-between">
           <h1 className="text-2xl font-bold">CourtHub</h1>
           <nav className="flex space-x-4">
-            <a href="#" className="hover:underline">Equipos</a>
+            <a href="/jugador/Equipos" className="hover:underline">Equipos</a>
             <a href="#" className="hover:underline">Reserva espacios deportivos</a>
             <a href="#" className="hover:underline">Torneos</a>
             <a href="#" className="hover:underline">Entrenos</a>
