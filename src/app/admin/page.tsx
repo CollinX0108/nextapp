@@ -16,6 +16,10 @@ const UserMain: React.FC = () => {
     router.push('/'); // Redirige a la página de inicio
   };
 
+  const handleSportClick = (sport: string) => {
+    router.push(`/reservas?sport=${sport}`);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <header className="bg-blue-500 text-white py-4">
@@ -41,25 +45,25 @@ const UserMain: React.FC = () => {
 
         {/* Sección de botones de deportes */}
         <div className="grid grid-cols-3 gap-8 text-center text-gray-500 mb-16">
-          <button className="text-lg hover:text-black">Futbolito</button>
-          <button className="text-lg hover:text-black">Volleyball</button>
-          <button className="text-lg hover:text-black">Tennis</button>
-          <button className="text-lg hover:text-black">Futbol</button>
-          <button className="text-lg hover:text-black">Basketball</button>
-          <button className="text-lg hover:text-black">PingPong</button>
+          <button onClick={() => handleSportClick('futbolito')} className="text-lg hover:text-black">Futbolito</button>
+          <button onClick={() => handleSportClick('volleyball')} className="text-lg hover:text-black">Volleyball</button>
+          <button onClick={() => handleSportClick('tennis')} className="text-lg hover:text-black">Tennis</button>
+          <button onClick={() => handleSportClick('futbol')} className="text-lg hover:text-black">Futbol</button>
+          <button onClick={() => handleSportClick('basketball')} className="text-lg hover:text-black">Basketball</button>
+          <button onClick={() => handleSportClick('pingpong')} className="text-lg hover:text-black">PingPong</button>
         </div>
 
         {/* Sección de íconos como botones */}
         <div className="grid grid-cols-3 gap-16 mt-40">
-          <button className="text-center focus:outline-none">
+          <button onClick={() => handleSportClick('futbol')} className="text-center focus:outline-none">
             <img src="/futbol.png" alt="Futbol" className="mx-auto w-52 h-52" />
             <p className="mt-4 font-bold">Futbol</p>
           </button>
-          <button className="text-center focus:outline-none">
-            <img src="/pingpong.png" alt="PingPong" className="mx-auto 52 h-52" />
+          <button onClick={() => handleSportClick('pingpong')} className="text-center focus:outline-none">
+            <img src="/pingpong.png" alt="PingPong" className="mx-auto w-52 h-52" />
             <p className="mt-4 font-bold">PingPong</p>
           </button>
-          <button className="text-center focus:outline-none">
+          <button onClick={() => handleSportClick('futbolito')} className="text-center focus:outline-none">
             <img src="/futbolito.PNG" alt="Futbolito" className="mx-auto w-52 h-52" />
             <p className="mt-4 font-bold">Futbolito</p>
           </button>

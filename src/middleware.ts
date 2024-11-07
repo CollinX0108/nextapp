@@ -14,11 +14,21 @@ export function middleware(request: NextRequest) {
     try {
       const decoded = jwtDecode<{ role: string }>(token);
       console.log("Token decodificado:", decoded); // Verificar el contenido del token
-  
-      if (decoded.role !== 'admin') {
-        console.log("Redirigiendo por rol no autorizado");
+
+      const { pathname } = new URL(request.url);
+
+      // Verificar roles específicos para rutas específicas
+      if (pathname.startsWith('/admin') && decoded.role !== 'admin') {
+        console.log("Redirigiendo por rol no autorizado para admin");
         return NextResponse.redirect(new URL('/', request.url));
       }
+
+      // Puedes agregar más verificaciones de rol para otras rutas si es necesario
+      // if (pathname.startsWith('/jugador') && decoded.role !== 'jugador') {
+      //   console.log("Redirigiendo por rol no autorizado para jugador");
+      //   return NextResponse.redirect(new URL('/', request.url));
+      // }
+
     } catch (error) {
       console.error('Error al decodificar el token:', error);
       return NextResponse.redirect(new URL('/', request.url));
@@ -28,5 +38,11 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: [
+    '/admin/:path*',
+    '/jugador/:path*',
+    '/entrenador/:path*',
+    '/arbitro/:path*',
+    '/reservas/:path*'
+  ],
 };
